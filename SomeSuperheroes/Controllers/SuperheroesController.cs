@@ -4,15 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SomeSuperheroes.Data;
 
 namespace SomeSuperheroes.Controllers
 {
     public class SuperheroesController : Controller
     {
+        public ApplicationDbContext _context;
+
+        public SuperheroesController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         // GET: Superheroes
         public ActionResult Index()
         {
-            return View();
+            var superheroes = _context.Superhero;
+            return View(superheroes);
         }
 
         // GET: Superheroes/Details/5
