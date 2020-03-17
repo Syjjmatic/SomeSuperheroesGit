@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SomeSuperheroes.Data;
+using SomeSuperheroes.Models;
 
 namespace SomeSuperheroes.Controllers
 {
@@ -16,86 +17,72 @@ namespace SomeSuperheroes.Controllers
         {
             _context = context;
         }
-        // GET: Superheroes
+
         public ActionResult Index()
         {
             var superheroes = _context.Superhero;
             return View(superheroes);
         }
 
-        // GET: Superheroes/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int Id)
         {
-            return View();
+            return View(_context.Superhero.Find(Id));
         }
-
-        // GET: Superheroes/Create
         public ActionResult Create()
         {
-            return View();
+            Superhero superhero = new Superhero();
+            return View(superhero);
         }
 
-        // POST: Superheroes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Superhero superhero)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                _context.Superhero.Add(superhero);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
+                return Create(superhero);
             }
         }
 
-        // GET: Superheroes/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(_context.Superhero.Find(id));
         }
 
-        // POST: Superheroes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Superhero superhero)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
+                _context.Superhero.Update(superhero);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
+                return Edit(id);
             }
         }
 
-        // GET: Superheroes/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(_context.Superhero.Find(id));
         }
 
-        // POST: Superheroes/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Superhero superhero)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _context.Superhero.Remove(superhero);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }
